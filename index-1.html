@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wuys Kaitun Quick Setup</title>
+<style>
+  :root{
+    --bg-0:#0a0612;
+    --bg-1:#1a0f2e;
+    --purple-1:#7c3aed;
+    --purple-2:#a855f7;
+    --purple-glow:#c084fc;
+    --text-0:#f3eefc;
+    --text-1:#b9aed1;
+    --card-bg:rgba(255,255,255,0.04);
+    --card-border:rgba(168,85,247,0.25);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{-webkit-tap-highlight-color:transparent;}
+
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(124,58,237,0.35), transparent 45%),
+      radial-gradient(circle at 85% 75%, rgba(168,85,247,0.25), transparent 50%),
+      linear-gradient(160deg, var(--bg-0) 0%, var(--bg-1) 45%, #120a20 100%);
+    background-attachment:fixed;
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    color:var(--text-0);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:32px 20px;
+    overflow-x:hidden;
+  }
+
+  .glow-orb{
+    position:fixed;
+    width:420px;
+    height:420px;
+    border-radius:50%;
+    filter:blur(120px);
+    opacity:0.35;
+    pointer-events:none;
+    z-index:0;
+  }
+  .glow-orb.one{ background:var(--purple-1); top:-120px; left:-120px; }
+  .glow-orb.two{ background:var(--purple-2); bottom:-140px; right:-100px; }
+
+  .container{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:460px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .badge{
+    font-size:12px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--purple-glow);
+    background:rgba(168,85,247,0.12);
+    border:1px solid rgba(168,85,247,0.3);
+    padding:6px 14px;
+    border-radius:999px;
+    margin-bottom:20px;
+    font-weight:600;
+  }
+
+  h1{
+    font-size:clamp(28px, 6vw, 38px);
+    text-align:center;
+    line-height:1.2;
+    background:linear-gradient(90deg, #ffffff, var(--purple-glow));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin-bottom:10px;
+    font-weight:800;
+  }
+
+  .subtitle{
+    color:var(--text-1);
+    text-align:center;
+    font-size:14.5px;
+    margin-bottom:36px;
+    max-width:380px;
+  }
+
+  .btn-list{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .action-btn{
+    position:relative;
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:16px 18px;
+    background:var(--card-bg);
+    border:1px solid var(--card-border);
+    border-radius:14px;
+    color:var(--text-0);
+    text-decoration:none;
+    cursor:pointer;
+    backdrop-filter:blur(6px);
+    transition:transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    text-align:left;
+    font-family:inherit;
+  }
+
+  .action-btn:hover{
+    transform:translateY(-2px);
+    border-color:var(--purple-glow);
+    background:rgba(168,85,247,0.1);
+  }
+
+  .action-btn:active{
+    transform:translateY(0px) scale(0.98);
+  }
+
+  .icon-wrap{
+    flex-shrink:0;
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg, var(--purple-1), var(--purple-2));
+    font-size:20px;
+  }
+
+  .btn-text{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    flex:1;
+  }
+
+  .btn-title{
+    font-size:15.5px;
+    font-weight:700;
+  }
+
+  .btn-sub{
+    font-size:12.5px;
+    color:var(--text-1);
+  }
+
+  .arrow{
+    color:var(--purple-glow);
+    font-size:18px;
+    flex-shrink:0;
+    opacity:0.8;
+  }
+
+  .toast{
+    position:fixed;
+    bottom:28px;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:linear-gradient(135deg, var(--purple-1), var(--purple-2));
+    color:#fff;
+    padding:12px 22px;
+    border-radius:999px;
+    font-size:13.5px;
+    font-weight:600;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.25s ease, transform 0.25s ease;
+    z-index:10;
+    box-shadow:0 8px 24px rgba(124,58,237,0.4);
+    white-space:nowrap;
+  }
+
+  .toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+
+  .guide{
+    width:100%;
+    margin-top:36px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .guide-heading{
+    font-size:12px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--purple-glow);
+    font-weight:700;
+    margin-bottom:2px;
+    padding-left:2px;
+  }
+
+  .step{
+    display:flex;
+    gap:14px;
+    background:var(--card-bg);
+    border:1px solid var(--card-border);
+    border-radius:14px;
+    padding:16px 18px;
+  }
+
+  .step-num{
+    flex-shrink:0;
+    width:30px;
+    height:30px;
+    border-radius:9px;
+    background:linear-gradient(135deg, var(--purple-1), var(--purple-2));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:800;
+    color:#fff;
+  }
+
+  .step-body{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+
+  .step-title{
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--text-0);
+  }
+
+  .step-desc{
+    font-size:13px;
+    color:var(--text-1);
+    line-height:1.5;
+  }
+
+  .step-desc code{
+    background:rgba(168,85,247,0.15);
+    border:1px solid rgba(168,85,247,0.25);
+    padding:1px 6px;
+    border-radius:6px;
+    font-size:12px;
+    color:var(--purple-glow);
+    font-family:'Consolas', monospace;
+  }
+
+  .tag-optional{
+    display:inline-block;
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    color:var(--purple-glow);
+    background:rgba(168,85,247,0.12);
+    border:1px solid rgba(168,85,247,0.3);
+    padding:2px 8px;
+    border-radius:999px;
+    margin-left:8px;
+    vertical-align:middle;
+  }
+
+  .partners{
+    width:100%;
+    margin-top:32px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .partner-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+
+  .partner-card{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 14px;
+    background:var(--card-bg);
+    border:1px solid var(--card-border);
+    border-radius:14px;
+    color:var(--text-0);
+    text-decoration:none;
+    transition:transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .partner-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--purple-glow);
+    background:rgba(168,85,247,0.1);
+  }
+
+  .partner-card:active{
+    transform:translateY(0) scale(0.98);
+  }
+
+  .partner-icon{
+    flex-shrink:0;
+    width:34px;
+    height:34px;
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg, var(--purple-1), var(--purple-2));
+  }
+
+  .partner-icon svg{
+    width:18px;
+    height:18px;
+    fill:#fff;
+  }
+
+  .partner-text{
+    display:flex;
+    flex-direction:column;
+    gap:1px;
+    min-width:0;
+  }
+
+  .partner-name{
+    font-size:14px;
+    font-weight:700;
+  }
+
+  .partner-sub{
+    font-size:11.5px;
+    color:var(--text-1);
+  }
+
+  @media (max-width:400px){
+    .partner-grid{
+      grid-template-columns:1fr;
+    }
+  }
+
+  .creator{
+    margin-top:28px;
+    font-size:12.5px;
+    color:var(--text-1);
+    text-align:center;
+  }
+
+  .creator strong{
+    color:var(--purple-glow);
+  }
+
+  footer{
+    margin-top:24px;
+    font-size:12px;
+    color:rgba(185,174,209,0.55);
+    text-align:center;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .action-btn{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="glow-orb one"></div>
+  <div class="glow-orb two"></div>
+
+  <div class="container">
+    <span class="badge">Quick Setup</span>
+    <h1>Wuys Kaitun<br>Quick Setup</h1>
+    <p class="subtitle">Pick an option below to get started.</p>
+
+    <div class="btn-list">
+      <a class="action-btn" href="https://deltaexploits.gg/" target="_blank" rel="noopener noreferrer">
+        <div class="icon-wrap">⬇</div>
+        <div class="btn-text">
+          <span class="btn-title">Get Delta</span>
+          <span class="btn-sub">deltaexploits.gg</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="action-btn" href="https://sourceforge.net/projects/orphamielautoclicker/files/OPAutoClicker.apk/download" target="_blank" rel="noopener noreferrer">
+        <div class="icon-wrap">🖱</div>
+        <div class="btn-text">
+          <span class="btn-title">OP Auto Clicker</span>
+          <span class="btn-sub">Anti AFK · sourceforge.net</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <button class="action-btn" id="copyBtn" type="button">
+        <div class="icon-wrap">📋</div>
+        <div class="btn-text">
+          <span class="btn-title">Wuys Kaitun V2</span>
+          <span class="btn-sub">Copy script to clipboard</span>
+        </div>
+        <span class="arrow">→</span>
+      </button>
+    </div>
+
+    <div class="guide">
+      <span class="guide-heading">How to Use</span>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <span class="step-title">Get Delta, log in, get key</span>
+          <span class="step-desc">Download Delta from the button above, log in, and grab your key.</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <span class="step-title">Execute Wuys Kaitun</span>
+          <span class="step-desc">Copy the Wuys Kaitun V2 script above and run it in Delta.</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <span class="step-title">Turn on the core options</span>
+          <span class="step-desc">
+            Enable <code>Legit Mode</code>, <code>Auto Move</code>, <code>Auto Jump</code>, and <code>Spam Q</code><span class="tag-optional">Optional</span>.
+            Load any main script, or go to the <code>Script</code> tab and pick <code>Allion</code>, <code>Thunder</code>, or <code>Achaotic</code>.
+          </span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <span class="step-title">Set up long AFK<span class="tag-optional">Optional</span></span>
+          <span class="step-desc">
+            Open OP Auto Clicker, choose <code>Single mode</code>, point it at the chat toggle button, and set the delay to <code>4000 / 1</code>.
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="partners">
+      <span class="guide-heading">Partners</span>
+      <div class="partner-grid">
+        <a class="partner-card" href="https://discord.gg/HqAje7zuFN" target="_blank" rel="noopener noreferrer">
+          <div class="partner-icon">
+            <svg viewBox="0 0 24 24"><path d="M20.317 4.369a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.369a.07.07 0 0 0-.032.027C.533 9.045-.32 13.579.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.076.076 0 0 0-.04.106c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.029 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.055c.5-5.177-.838-9.673-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.331c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.096 2.157 2.419 0 1.333-.955 2.419-2.157 2.419zm7.974 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.096 2.157 2.419 0 1.333-.946 2.419-2.157 2.419z"/></svg>
+          </div>
+          <div class="partner-text">
+            <span class="partner-name">Achaotic</span>
+            <span class="partner-sub">Discord</span>
+          </div>
+        </a>
+
+        <a class="partner-card" href="https://discord.gg/vNgyR9WPU4" target="_blank" rel="noopener noreferrer">
+          <div class="partner-icon">
+            <svg viewBox="0 0 24 24"><path d="M20.317 4.369a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.369a.07.07 0 0 0-.032.027C.533 9.045-.32 13.579.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.076.076 0 0 0-.04.106c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.029 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.055c.5-5.177-.838-9.673-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.331c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.096 2.157 2.419 0 1.333-.955 2.419-2.157 2.419zm7.974 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.096 2.157 2.419 0 1.333-.946 2.419-2.157 2.419z"/></svg>
+          </div>
+          <div class="partner-text">
+            <span class="partner-name">Thunder</span>
+            <span class="partner-sub">Discord</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <p class="creator">Creator: <strong>Wuys</strong> / <strong>AdonisMK3</strong> (Achaotic Owner)</p>
+
+    <footer>Wuys Kaitun · Quick Setup Page</footer>
+  </div>
+
+  <div class="toast" id="toast">Copied to clipboard!</div>
+
+  <script>
+    const script = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/natsumitakehisha/WuysLua/refs/heads/main/free.luau"))()';
+    const copyBtn = document.getElementById('copyBtn');
+    const toast = document.getElementById('toast');
+    let toastTimer;
+
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    copyBtn.addEventListener('click', async () => {
+      try{
+        await navigator.clipboard.writeText(script);
+        showToast('Copied to clipboard!');
+      }catch(err){
+        const ta = document.createElement('textarea');
+        ta.value = script;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try{
+          document.execCommand('copy');
+          showToast('Copied to clipboard!');
+        }catch(e){
+          showToast('Copy failed, please try again.');
+        }
+        document.body.removeChild(ta);
+      }
+    });
+  </script>
+
+</body>
+</html>
